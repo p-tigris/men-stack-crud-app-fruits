@@ -23,6 +23,12 @@ app.get('/', async (req, res) => {
     res.render("index.ejs");
 });
 
+app.get('/fruits', async (req, res) => {
+    const allFruits = await Fruit.find({});
+
+    res.render('fruits/index.ejs', { fruits: allFruits });
+});
+
 // GET /fruits/new
 app.get('/fruits/new', (req, res) => {
     res.render("fruits/new.ejs");
@@ -37,7 +43,7 @@ app.post('/fruits', async (req, res) => {
     }
 
     await Fruit.create(req.body); // this line is the database transaction
-    res.redirect('/fruits/new');
+    res.redirect('/fruits/');
 });
 
 app.listen(3000, () => {
