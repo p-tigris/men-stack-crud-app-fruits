@@ -3,6 +3,8 @@ dotenv.config(); // using dotenv to bring the variables from the .env file
 
 const express = require('express');
 const mongoose = require('mongoose');
+const methodOverride = require('method-override');
+const morgan = require('morgan');
 
 const app = express();
 
@@ -17,6 +19,8 @@ const Fruit = require('./models/fruit.js');
 
 // adding middleware for app
 app.use(express.urlencoded({ extended: false }));
+app.use(methodOverride('_method'));
+app.use(morgan('dev'));
 
 
 app.get('/', async (req, res) => {
@@ -51,6 +55,12 @@ app.post('/fruits', async (req, res) => {
     await Fruit.create(req.body); // this line is the database transaction
     res.redirect('/fruits/');
 });
+
+// DELETE route
+app.delete('/fruits/:fruitId', async (req, res) => {
+    await Fruit.findByIdAndDelete(req.params.fruitId);
+    res.redirect('/fruits');
+})
 
 app.listen(3000, () => {
   console.log('Listening on port 3000');
